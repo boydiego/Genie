@@ -39,3 +39,80 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+import { Platform, StatusBar, StyleSheet, View } from "react-native";
+
+import { AppLoading } from "expo";
+
+import { Asset } from "expo-asset";
+import * as Font from "expo-font";
+
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { ApolloClient } from "apollo-client";
+import { HttpLink } from "apollo-link-http";
+import { ApolloProvider } from "react-apollo";
+
+import AppNavigator from "./navigation/AppNavigator";
+
+//Define your client for your ApolloProvider connecting to your graphql server.
+const client = new ApolloClient({
+  // initialize cache
+  cache: new InMemoryCache(),
+  //Assign your link with a new instance of a HttpLink linking to your graphql server
+  link: new HttpLink({
+    uri: "https://graphql-server-node-js-103.herokuapp.com/graphql"
+  })
+});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  }
+});
+
+export default class App extends React.Component {
+  state = {
+    isLoadingComplete: false
+  };
+
+  loadResourcesAsync = async () => {
+    await Promise.all([
+      Asset.loadAsync([
+        // load assets here
+      ]),
+      Font.loadAsync({
+        // load fonts here
+      })
+    ]);
+  };
+
+  handleLoadingError = () => {
+    // Any error handling can be done here
+  };
+
+  handleFinishLoading = () => {
+    this.setState({ isLoadingComplete: true });
+  };
+
+  render() {
+    const { isLoadingComplete } = this.state;
+    const { skipLoadingScreen } = this.props;
+    if (!isLoadingComplete && !skipLoadingScreen) {
+      return (
+        <AppLoading
+          startAsync={this.loadResourcesAsync}
+          onError={this.handleLoadingError}
+          onFinish={this.handleFinishLoading}
+        />
+      );
+    }
+    return (
+      <ApolloProvider client={client}>
+        <View style={styles.container}>
+          <AppNavigator />
+        </View>
+      </ApolloProvider>
+    );
+  }
+}
+

@@ -1,13 +1,15 @@
-const express = require('express');
+const express = require('express')
+const mongoose = require('mongoose')
 const contactRouter = require('./routes/contacts')
-const app = express();
-const port = 8080;
+const app = express()
+const port = 8080
+
+mongoose.connect('mongodb://localhost/genie')
 
 app.set('view engine', 'ejs')
+app.use(express.urlencoded({ extended: false }))
 
-app.use('/contacts', contactRouter)
-
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   const contacts = [{
     firstName: 'Kyle',
     lastName: 'WebDevSimplified',
@@ -25,6 +27,8 @@ app.get('/', function (req, res) {
   }]
   res.render('contacts/index', { contacts: contacts })
 })
+
+app.use('/contacts', contactRouter)
 
 app.listen(port, () => {
   console.log(`Let's go Genie at http://localhost:${port}`)

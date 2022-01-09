@@ -10,7 +10,7 @@ MongoClient.connect('mongodb://localhost:27017/genie', function (err, db) {
   }
   console.log('db connected');
   db.close();
-});)
+});
 
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))

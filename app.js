@@ -1,10 +1,16 @@
 const express = require('express')
-const mongoose = require('mongoose')
+const MongoClient = require('mongodb').MongoClient;
 const contactRouter = require('./routes/contacts')
 const app = express()
 const port = 8080
 
-mongoose.connect('mongodb://localhost/genie')
+MongoClient.connect('mongodb://localhost:27017/genie', function (err, db) {
+  if (err) {
+    throw err;
+  }
+  console.log('db connected');
+  db.close();
+});)
 
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))

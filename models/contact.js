@@ -1,6 +1,7 @@
-const mongoose = require('mongoose')
+const mongodb = require('mongodb').MongoClient;
 
-const contactSchema = new mongoose.Schema({
+
+const contactSchema = new mongodb.Schema({
   firstName: {
     type: String,
     required: true,
@@ -19,4 +20,4 @@ const contactSchema = new mongoose.Schema({
   }
 })
 
-module.exports = mongoose.model('Contact', contactSchema)
+module.exports = mongodb.model('Contact', contactSchema)

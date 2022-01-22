@@ -1,8 +1,9 @@
-const express = require('express')
+const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
-const contactRouter = require('./routes/contacts')
-const app = express()
-const port = 8080
+const contactRouter = require('./routes/contacts');
+const cors = require("cors");
+const app = express();
+const port = 8080;
 
 MongoClient.connect('mongodb://localhost:27017/genie', function (err, db) {
   if (err) {
@@ -12,8 +13,11 @@ MongoClient.connect('mongodb://localhost:27017/genie', function (err, db) {
   db.close();
 });
 
+// middleware
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))
+app.use(cors());
+app.use(express.json());
 
 app.get('/', (req, res) => {
   const contacts = [{
